@@ -107,6 +107,8 @@
       new Vue({
         el: "#app",
         vuetify: new Vuetify(),
+        // add a "created" function to get user info if user has login 
+        // created: async function () {},
         data: {
           // add student_ID value
           // add name value
@@ -125,8 +127,6 @@
             baseURL: "http://140.125.207.196:9000/api",
           }),
         },
-        // add a "created" function to get user info if user has login 
-        // created: async function () {},
         methods: {
           // create a method to change password
         },
