@@ -32,25 +32,33 @@
                   <span>name:</span>
                 </v-col>
                 <v-col class="d-flex justify-center font1" cols="6">
-                  <!-- add a name value with {{}} at # -->
-                  <span>#</span>
+                  <span>{{name}}</span>
                 </v-col>
                 <v-col class="d-flex justify-center font1" cols="6">
                   <span>ID:</span>
                 </v-col>
                 <v-col class="d-flex justify-center font1" cols="6">
-                  <!-- add a s_id value with {{}} at # -->
-                  <span>#</span>
+                  <span>{{s_id}}</span>
                 </v-col>
                 <v-col class="d-flex justify-center mt-10" cols="5">
-                  <!-- add a click event to direct to change_pwd page -->
-                  <v-btn color="grey darken-2" large block outlined>
+                  <v-btn
+                    color="grey darken-2"
+                    @click="change_pwd"
+                    large
+                    block
+                    outlined
+                  >
                     change pswd
                   </v-btn>
                 </v-col>
                 <v-col class="d-flex justify-center mt-10" cols="5">
-                  <!-- add a click event to logout -->
-                  <v-btn color="grey darken-2" large block outlined>
+                  <v-btn
+                    color="grey darken-2"
+                    @click="logout"
+                    large
+                    block
+                    outlined
+                  >
                     logout
                   </v-btn>
                 </v-col>
@@ -68,21 +76,40 @@
       new Vue({
         el: "#app",
         vuetify: new Vuetify(),
-        // add a "created" function to get user info if user has login 
-        // created: async function () {},
+        created: async function () {
+          let res = (await this.axios.get("/getInfo")).data;
+          if (res == 0) {
+            window.location.replace("index.html");
+            alert("login first");
+          } else {
+            this.name = res.name;
+            this.s_id = res.s_id;
+          }
+        },
         data() {
-          //add name value
-          //add s_id value
           return {
+            name: null,
+            s_id: null,
             axios: axios.create({
               withCredentials: true,
+              crossDomain: true,
               baseURL: "http://140.125.207.196:9000/api",
             }),
           };
         },
         methods: {
-          // create a method to redirect to change_pswd page
-          // create a logout method to logout
+          change_pwd() {
+            window.location.replace("changePswd.html");
+          },
+          async logout() {
+            let res = (await this.axios.get("logout")).data;
+            if (res == 1) {
+              window.location.replace("index.html");
+              alert("logout success");
+            } else {
+              alert("logout failed");
+            }
+          },
         },
       });
     </script>

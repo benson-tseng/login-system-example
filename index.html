@@ -23,16 +23,15 @@
       <v-app>
         <v-container fill-height fluid>
           <v-card class="ma-auto pa-10" width="500" height="500" outlined>
-            <!-- add a sign in function in # -->
-            <v-form lazy-validation @submit.prevent="#" ref="form">
+            <v-form lazy-validation @submit.prevent="sign_in" ref="form">
               <v-container fluid fill-height class="d-flex align-center">
                 <v-row>
                   <v-col cols="12" class="mb-10 d-flex justify-center">
                     <span class="display-1">WELCOME !!</span>
                   </v-col>
                   <v-col cols="12" class="py-1 px-5">
-                    <!-- add a v-model for account input -->
                     <v-text-field
+                      v-model="account"
                       label="account"
                       outlined
                       rounded
@@ -42,9 +41,9 @@
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" class="py-1 px-5">
-                    <!-- add a v-model for password input -->
                     <v-text-field
                       hide-details="auto"
+                      v-model="password"
                       label="password"
                       outlined
                       rounded
@@ -91,21 +90,39 @@
         el: "#app",
         vuetify: new Vuetify(),
         data: {
-          // add account value
-          // add password value
+          account: null,
+          password: null,
           show: false,
           loading: false,
           rules: {
             required: (value) => !!value || "required",
           },
-          //vvvv this is fking important vvv
+          //fking important
           axios: axios.create({
             withCredentials: true,
             baseURL: "http://140.125.207.196:9000/api",
           }),
         },
         methods: {
-          // create a method to sign in
+          async sign_in() {
+            this.loading = true;
+            let res = (
+              await this.axios.post("login", {
+                s_id: this.account,
+                password: this.password,
+              })
+            ).data;
+            if (res == 1) {
+              alert("good");
+              // window.location.replace("info.html");
+            } else {
+              alert("noooop");
+              this.account = null;
+              this.password = null;
+              this.loading = false;
+            }
+            this.loading = false;
+          },
         },
       });
     </script>
